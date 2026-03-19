@@ -11,7 +11,6 @@ import { TipoPago } from '../entities/tipo-pago.entity';
 
 // Lazy imports for heavy deps (avoid loading on cold paths)
 let handlebars: typeof import('handlebars') | null = null;
-let puppeteer: typeof import('puppeteer') | null = null;
 
 function formatLocalDate(d?: Date | null) {
     if (!d) return '';
@@ -286,49 +285,8 @@ export class TemplatesService {
         return tpl(ctx);
     }
 
-    async renderPdfFromHtml(html: string, tipo: PlantillaTipo, ventaId: number | undefined, originUrl: string, cajaSesionId?: number, cotizacionId?: number) {
-        if (!puppeteer) puppeteer = await import('puppeteer');
-
-        let browser: any = null;
-        try {
-            const rendered = await this.renderHtml(html, ventaId, originUrl, cajaSesionId, cotizacionId);
-            console.log(`[TemplatesService] HTML rendered (${rendered.length} bytes) for ${cotizacionId ? 'cot:' + cotizacionId : 'venta:' + ventaId}`);
-
-            browser = await puppeteer.launch({
-                headless: true,
-                args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            });
-            console.log('[TemplatesService] Puppeteer launched');
-
-            const page = await browser.newPage();
-            console.log('[TemplatesService] New page created');
-            
-            // await page.setJavaScriptEnabled(false); 
-            await page.setContent(rendered, { waitUntil: 'load', timeout: 30000 });
-            console.log('[TemplatesService] Page content set');
-
-            const pdfOptions: any = {
-                printBackground: true,
-                margin: { top: '6mm', right: '6mm', bottom: '6mm', left: '6mm' },
-            };
-
-            if (tipo === 'TICKET') {
-                pdfOptions.width = '80mm';
-                pdfOptions.height = '297mm';
-            } else {
-                pdfOptions.format = 'A4';
-            }
-
-            console.log('[TemplatesService] Generating PDF...');
-            const buf = await page.pdf(pdfOptions);
-            console.log(`[TemplatesService] PDF generated (${buf.length} bytes)`);
-            return Buffer.from(buf);
-        } catch (err) {
-            console.error('[TemplatesService] CRITICAL Error in renderPdfFromHtml:', err.message, err.stack);
-            throw err;
-        } finally {
-            if (browser) await browser.close();
-        }
+    async renderPdfFromHtml(html: string, tipo: PlantillaTipo, ventaId: number | undefined, originUrl: string, cajaSesionId?: number, cotizacionId?: number): Promise<Buffer> {
+        throw new BadRequestException('La generación de PDF desde HTML está deshabilitada (Puppeteer fue removido para compatibilidad con Hosting Compartido). Se usará el generador base PDFKit.');
     }
 
     async renderPdfFromTemplate(templateId: number, ventaId: number | undefined, originUrl: string) {

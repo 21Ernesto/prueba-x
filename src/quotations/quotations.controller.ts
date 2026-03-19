@@ -47,8 +47,13 @@ export class QuotationsController {
         res.set({
             'Content-Type': 'application/pdf',
             'Content-Disposition': `inline; filename=cotizacion-${id}.pdf`,
-            'Content-Length': result.pdf.length,
         });
-        res.end(result.pdf);
+
+        if (result && result.pdf) {
+            res.set('Content-Length', String(result.pdf.length));
+            res.end(result.pdf);
+        } else {
+            res.status(404).json({ message: 'No se pudo generar la cotización' });
+        }
     }
 }

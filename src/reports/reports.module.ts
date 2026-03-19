@@ -135,18 +135,7 @@ class ReportsController {
         const { venta, empresa } = await this.svc.getVentaDetalle(id);
         if (!venta) throw new NotFoundException('Venta no encontrada');
 
-        // Si hay plantilla activa, generar desde HTML
-        const origin = `${res.req.protocol}://${res.req.get('host')}`;
-        try {
-            const out = await this.templatesService.renderBestTemplateForVenta(id, origin);
-            if (out?.pdf) {
-                res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition', `inline; filename="venta-${id}.pdf"`);
-                return res.send(out.pdf);
-            }
-        } catch (err) {
-            console.error('Error rendering template PDF, falling back to PDFKit:', err);
-        }
+        // PDF generation using PDFKit (Puppeteer was removed for shared hosting compatibility)
 
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `inline; filename="venta-${id}.pdf"`);
