@@ -58,6 +58,7 @@ import { TemplatesModule } from './templates/templates.module';
 import { QuotationsModule } from './quotations/quotations.module';
 import { BranchesModule } from './branches/branches.module';
 import { InventoryModule } from './inventory/inventory.module';
+import { DatabaseSeederModule } from './database-seeder/database-seeder.module';
 
 @Module({
     imports: [
@@ -111,6 +112,7 @@ import { InventoryModule } from './inventory/inventory.module';
         ReportsModule,
         BranchesModule,
         InventoryModule,
+        DatabaseSeederModule,
     ],
 })
 export class AppModule { }
