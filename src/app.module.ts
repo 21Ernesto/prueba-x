@@ -78,7 +78,7 @@ import { InventoryModule } from './inventory/inventory.module';
                 PlantillaComprobante, Cotizacion, DetalleCotizacion,
                 Sucursal, ArticuloStock, InventarioMovimiento,
             ],
-            synchronize: false,
+            synchronize: true,
             logging: false,
             timezone: 'local',
         }),
