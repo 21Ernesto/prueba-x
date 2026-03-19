@@ -14,7 +14,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { Response } from 'express';
-import PDFDocument = require('pdfkit');
+// pdfkit import moved to lazy-load inside methods
 import { TemplatesService } from '../templates/templates.service';
 import { TemplatesModule } from '../templates/templates.module';
 
@@ -140,6 +140,7 @@ class ReportsController {
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `inline; filename="venta-${id}.pdf"`);
 
+        const PDFDocument = require('pdfkit');
         const doc = new PDFDocument({ size: 'A4', margin: 40 });
         doc.pipe(res);
 

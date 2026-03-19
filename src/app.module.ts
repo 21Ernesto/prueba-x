@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 import { Usuario } from './entities/usuario.entity';
 import { Rol } from './entities/rol.entity';
@@ -81,6 +82,10 @@ import { InventoryModule } from './inventory/inventory.module';
             synchronize: true,
             logging: false,
             timezone: 'local',
+        }),
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', 'uploads'),
+            serveRoot: '/uploads',
         }),
         AuthModule,
         UsersModule,

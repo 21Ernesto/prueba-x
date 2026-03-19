@@ -46,16 +46,6 @@ async function bootstrap() {
 
     app.setGlobalPrefix('api');
 
-    const uploadsCandidates = [
-        join(process.cwd(), 'uploads'),
-        join(__dirname, '..', '..', 'uploads'),
-        join(__dirname, '..', 'uploads'),
-    ];
-
-    const uploadsPath = uploadsCandidates.find((p) => existsSync(p)) ?? uploadsCandidates[0];
-
-    app.useStaticAssets(uploadsPath, { prefix: '/uploads' });
-
     const port = process.env.PORT || 3000;
     await app.listen(port);
 
